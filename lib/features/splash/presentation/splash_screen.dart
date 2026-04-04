@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
+import '../../../shared/extensions/context_l10n.dart';
+import '../../app_config/data/app_config_repository.dart';
 import '../../auth/application/session_controller.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -15,36 +16,34 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _bootstrap();
+
+    Future.microtask(() async {
+      final sessionController = ref.read(sessionControllerProvider);
+      ref.read(appConfigProvider.future);
+
+      await sessionController.ensureInitialized();
     });
-  }
-
-  Future<void> _bootstrap() async {
-    // Всё, что нужно от provider, считываем до await
-    final sessionController = ref.read(sessionControllerProvider);
-
-    await Future<void>.delayed(const Duration(milliseconds: 300));
-    await sessionController.restoreSession();
-
-    if (!mounted) return;
-
-    switch (sessionController.status) {
-      case SessionStatus.authenticated:
-        context.go('/home');
-        break;
-      case SessionStatus.unauthenticated:
-      case SessionStatus.initializing:
-        context.go('/login');
-        break;
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Center(
-        child: CircularProgressIndicator(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(
+              width: 36,
+              height: 36,
+              child: CircularProgressIndicator(),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              context.l10n.loading,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
       ),
     );
   }

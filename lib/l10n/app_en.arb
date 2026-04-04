@@ -1,6 +1,5 @@
 {
   "@@locale": "en",
-  "localeName": "en",
   "loading": "Loading...",
   "continueLabel": "Continue",
   "loginSubtitle": "Open the app from Telegram, use the bot deep link, or paste a code / token.",

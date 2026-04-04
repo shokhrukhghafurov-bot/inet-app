@@ -67,7 +67,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final configAsync = ref.watch(appConfigProvider);
     final localeController = ref.watch(localeControllerProvider);
     final env = ref.watch(appEnvProvider);
-    final config = configAsync.valueOrNull;
+    final config = configAsync.value;
     final isLoading = session.status == SessionStatus.initializing;
 
     return Scaffold(

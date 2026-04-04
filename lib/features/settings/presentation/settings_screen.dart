@@ -17,7 +17,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final localeController = ref.watch(localeControllerProvider);
-    final config = ref.watch(appConfigProvider).valueOrNull;
+    final config = ref.watch(appConfigProvider).value;
     final env = ref.watch(appEnvProvider);
 
     return Scaffold(

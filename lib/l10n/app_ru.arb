@@ -1,6 +1,5 @@
 {
   "@@locale": "ru",
-  "localeName": "ru",
   "loading": "Загрузка...",
   "continueLabel": "Продолжить",
   "loginSubtitle": "Открой приложение из Telegram, перейди по ссылке из бота или вставь код / токен.",

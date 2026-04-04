@@ -89,9 +89,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                         : context.l10n.connect,
                     onPressed: () => _toggleConnection(
                       context,
-                      locationsAsync.valueOrNull ?? const [],
-                      subscriptionAsync.valueOrNull,
-                      selectedLocationController.current(locationsAsync.valueOrNull ?? const []),
+                      locationsAsync.value ?? const [],
+                      subscriptionAsync.value,
+                      selectedLocationController.current(locationsAsync.value ?? const []),
                     ),
                   ),
                   if (vpnController.errorMessage case final error?) ...[

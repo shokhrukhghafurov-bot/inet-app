@@ -60,18 +60,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          context.l10n.connectionStatus,
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                      ),
-                      StatusBadge(label: _statusLabel(context, vpnController.status)),
-                    ],
+                  Text(
+                    context.l10n.connectionStatus,
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 10,
+                    runSpacing: 10,
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      StatusBadge(label: _statusLabel(context, vpnController.status)),
+                      Text(
+                        _statusDescription(context, vpnController.status),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.white70,
+                            ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
                   subscriptionAsync.when(
                     data: (subscription) => Text(
                       _subscriptionSummary(context, subscription),
@@ -291,6 +299,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       VpnConnectionStatus.disconnecting => context.l10n.disconnecting,
       VpnConnectionStatus.unsupported => context.l10n.nativePending,
       VpnConnectionStatus.disconnected => context.l10n.disconnected,
+    };
+  }
+
+  static String _statusDescription(BuildContext context, VpnConnectionStatus status) {
+    return switch (status) {
+      VpnConnectionStatus.connected => 'VPN активно и готово к работе.',
+      VpnConnectionStatus.connecting => 'Подождите немного, соединение устанавливается.',
+      VpnConnectionStatus.disconnecting => 'Соединение завершается.',
+      VpnConnectionStatus.unsupported => 'Нативный VPN-модуль ещё не подключён к приложению.',
+      VpnConnectionStatus.disconnected => 'Выберите локацию и нажмите кнопку подключения.',
     };
   }
 

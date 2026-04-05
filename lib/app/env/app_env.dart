@@ -43,7 +43,7 @@ class AppEnv {
             defaultValue: 'https://t.me/inet_support',
           ),
           appScheme: 'inet',
-          appName: 'INET Dev',
+          appName: 'INET',
         );
       case AppFlavor.prod:
         return const AppEnv(

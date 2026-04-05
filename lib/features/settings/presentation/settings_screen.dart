@@ -59,10 +59,6 @@ class SettingsScreen extends ConsumerWidget {
                   subtitle: config?.botUrl ?? env.botUrl,
                   onTap: () => _launch(config?.botUrl ?? env.botUrl),
                 ),
-                const SettingTile(
-                  title: 'Диагностика',
-                  subtitle: 'MVP placeholder для логов и статуса VPN',
-                ),
                 SettingTile(
                   title: context.l10n.version,
                   subtitle: '0.1.0+1',

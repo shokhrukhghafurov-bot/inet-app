@@ -1,8 +1,8 @@
 package com.example.inet_app
 
 import android.app.Activity
+import android.content.Intent
 import android.net.VpnService
-import androidx.activity.result.contract.ActivityResultContracts
 import com.example.inet_app.vpn.InetVpnService
 import com.example.inet_app.vpn.VpnConnectConfig
 import com.example.inet_app.vpn.VpnStateStore
@@ -15,33 +15,7 @@ class MainActivity : FlutterActivity() {
     private val channelName = "inet/vpn"
     private var pendingResult: MethodChannel.Result? = null
     private var pendingConfigJson: String? = null
-
-    private val vpnPermissionLauncher = registerForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) { result ->
-        val callback = pendingResult
-        val configJson = pendingConfigJson
-        pendingResult = null
-        pendingConfigJson = null
-
-        val config = VpnConnectConfig.fromJsonString(configJson)
-        if (result.resultCode == Activity.RESULT_OK && config != null && config.isComplete()) {
-            VpnStateStore(this).setPermissionRequired(false)
-            InetVpnService.connect(this, config)
-            callback?.success(null)
-        } else {
-            VpnStateStore(this).apply {
-                setPermissionRequired(false)
-                setStatus(VpnStateStore.STATUS_DISCONNECTED)
-                setError("VPN permission was not granted.")
-            }
-            callback?.error(
-                "permission_denied",
-                "VPN permission was not granted.",
-                null,
-            )
-        }
-    }
+    private val vpnPermissionRequestCode = 4242
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
@@ -93,6 +67,39 @@ class MainActivity : FlutterActivity() {
             setConfig(config)
             setReconnectOnLaunch(true)
         }
-        vpnPermissionLauncher.launch(prepareIntent)
+
+        startActivityForResult(prepareIntent, vpnPermissionRequestCode)
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode != vpnPermissionRequestCode) {
+            return
+        }
+
+        val callback = pendingResult
+        val configJson = pendingConfigJson
+        pendingResult = null
+        pendingConfigJson = null
+
+        val config = VpnConnectConfig.fromJsonString(configJson)
+        if (resultCode == Activity.RESULT_OK && config != null && config.isComplete()) {
+            VpnStateStore(this).setPermissionRequired(false)
+            InetVpnService.connect(this, config)
+            callback?.success(null)
+        } else {
+            VpnStateStore(this).apply {
+                setPermissionRequired(false)
+                setStatus(VpnStateStore.STATUS_DISCONNECTED)
+                setError("VPN permission was not granted.")
+            }
+            callback?.error(
+                "permission_denied",
+                "VPN permission was not granted.",
+                null,
+            )
+        }
     }
 }

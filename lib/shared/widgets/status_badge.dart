@@ -8,7 +8,8 @@ class StatusBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      constraints: const BoxConstraints(minHeight: 40, maxWidth: 260),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary.withOpacity(0.14),
         borderRadius: BorderRadius.circular(999),
@@ -16,7 +17,15 @@ class StatusBadge extends StatelessWidget {
           color: Theme.of(context).colorScheme.primary.withOpacity(0.32),
         ),
       ),
-      child: Text(label),
+      child: Text(
+        label,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+      ),
     );
   }
 }

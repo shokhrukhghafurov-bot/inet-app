@@ -61,16 +61,17 @@ jobs:
           go-version: '1.25.0'
           cache: true
 
-      - name: Install gomobile
+      - name: Install SagerNet gomobile toolchain
         shell: bash
         run: |
           set -euo pipefail
           go version
           go env
-          go install golang.org/x/mobile/cmd/gomobile@v0.0.0-20260312152759-81488f6aeb60
+          go install github.com/sagernet/gomobile/cmd/gomobile@v0.1.12
+          go install github.com/sagernet/gomobile/cmd/gobind@v0.1.12
           export PATH="$(go env GOPATH)/bin:$PATH"
           gomobile version || true
-          gomobile init
+          gomobile init || true
 
       - name: Resolve sing-box source tree
         shell: bash

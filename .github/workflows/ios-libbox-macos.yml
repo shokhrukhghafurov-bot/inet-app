@@ -58,7 +58,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v6
         with:
-          go-version: '1.24.7'
+          go-version: '1.25.0'
           cache: true
 
       - name: Install gomobile
@@ -67,7 +67,7 @@ jobs:
           set -euo pipefail
           go version
           go env
-          go install golang.org/x/mobile/cmd/gomobile@latest
+          go install golang.org/x/mobile/cmd/gomobile@v0.0.0-20260312152759-81488f6aeb60
           export PATH="$(go env GOPATH)/bin:$PATH"
           gomobile version || true
           gomobile init

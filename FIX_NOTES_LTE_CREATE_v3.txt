@@ -1,0 +1,17 @@
+Исправление v3 для Railway production: POST /api/infra/admin/vpn/locations падал 500, потому что в старой БД таблица locations была создана без колонки vpn_payload.
+
+Что исправлено:
+1. backend_admin/db_store.py
+   - в MIGRATION_SQL добавлено: ALTER TABLE locations ADD COLUMN IF NOT EXISTS vpn_payload JSONB NOT NULL DEFAULT '{}'::jsonb
+   - в POST_MIGRATION_SQL добавлено заполнение NULL -> '{}'::jsonb
+
+Почему это чинит баг:
+- admin POST/UPSERT использует INSERT ... vpn_payload ...
+- на старой Railway PostgreSQL schema колонка отсутствовала, из-за чего было: psycopg.errors.UndefinedColumn: column "vpn_payload" of relation "locations" does not exist
+- после деплоя bootstrap() автоматически догонит схему, и новые LTE/location будут сохраняться и сразу использоваться приложением
+
+Что проверить после деплоя:
+- создать uz-lte / ru-lte через админку
+- убедиться, что строка появляется в /api/infra/admin/vpn/locations
+- убедиться, что клиент видит локацию в GET /locations
+- проверить GET /vpn/config/uz-lte и подключение в приложении

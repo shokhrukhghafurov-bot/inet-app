@@ -1,0 +1,21 @@
+Verification summary
+====================
+
+What is confirmed in code
+- Backend normalizes admin payloads to mobile sing-box/TUN defaults.
+- raw_xray_config is parsed into VLESS/Reality mobile fields on the backend.
+- Android always picks SingBoxRunner.
+- iOS always picks SingBoxRunner.
+- Android/iOS sing-box config builders create TUN inbounds with auto_route + strict_route and route.final=proxy.
+- Real native libbox runtime factories are still NOT bundled in this archive.
+
+What I fixed
+- Dart config model now restores default DNS servers when payload DNS is empty/blank.
+- iOS config parsing now normalizes and de-duplicates DNS server arrays and restores safe defaults.
+- iOS PacketTunnelProvider now forces tunnel DNS for all domains via matchDomains=[""].
+- iOS sing-box builder now restores fallback DNS if config DNS is empty.
+- iOS bridge now loads the NETunnelProviderManager matching the PacketTunnel bundle identifier instead of blindly taking the first manager.
+
+Limits of this verification
+- Python backend syntax was checked with py_compile.
+- Native Android/iOS full runtime launch was not executable from this archive because the archive does not include complete host build projects / SDK setup and does not include working libbox runtime factory implementations.

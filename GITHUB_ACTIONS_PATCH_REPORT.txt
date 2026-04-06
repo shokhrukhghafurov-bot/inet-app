@@ -1,0 +1,13 @@
+Added GitHub Actions workflow for macos-latest:
+- .github/workflows/ios-libbox-macos.yml
+- docs/GITHUB_ACTIONS_MACOS.md
+
+Behavior:
+- Builds ios/Frameworks/Libbox.xcframework on GitHub-hosted macOS
+- Auto-resolves local sing-box-testing source or clones SagerNet/sing-box when missing
+- Uploads Libbox.xcframework as artifact
+- Conditionally runs xcodebuild only when a real ios/Runner.xcodeproj or ios/Runner.xcworkspace exists
+
+Reason:
+- The patch archive contains iOS PacketTunnel sources, but not a full generated Xcode host project
+- This makes framework CI real and useful now, while staying honest about app-build prerequisites

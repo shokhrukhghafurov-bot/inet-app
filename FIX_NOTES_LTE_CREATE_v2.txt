@@ -1,0 +1,16 @@
+Дополнительное усиление фикса для create/save LTE/location через админку.
+
+Что добавлено поверх исходного патча:
+- create_location теперь валидирует обязательные поля code/name_ru/name_en до INSERT;
+- булевы и status/sort_order нормализуются единообразно;
+- сохранение location вынесено в retry-safe upsert helper;
+- если PostgreSQL sequence для locations снова отстанет и даст duplicate key по locations_pkey,
+  backend автоматически делает resync sequence и повторяет INSERT/UPSERT ещё раз;
+- POST /api/infra/admin/vpn/locations теперь возвращает понятную DB-ошибку в detail,
+  а не молча валится без объяснения.
+
+Ожидаемый результат:
+- создание новой обычной location через админку проходит без 500;
+- создание/сохранение LTE location через админку проходит стабильно;
+- LTE location остаётся доступной в /locations и /vpn/config/{code};
+- приложение видит новую location после refresh и может использовать её при полной bridge-конфигурации.

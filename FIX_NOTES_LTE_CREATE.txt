@@ -1,0 +1,21 @@
+Исправление для кейса: создание/редактирование LTE и обычных locations через админку должно стабильно работать и сразу быть доступно приложению.
+
+Что изменено:
+1. backend_admin/db_store.py
+   - добавлена синхронизация PostgreSQL sequence для serial id-таблиц на старте backend;
+   - перед INSERT в locations выполняется resync sequence для locations;
+   - нормализуются поля code/name/country/status/sort_order;
+   - vpn_payload автоматически нормализуется, добавляет location_code и remark если их нет.
+
+2. backend_admin/backend.py
+   - POST /api/infra/admin/vpn/locations теперь корректно возвращает 400 для валидируемых ошибок вместо немого 500.
+
+Зачем это нужно:
+- после старых импортов/restore БД sequence часто отстает от MAX(id), из-за чего PATCH работает, а POST /api/infra/admin/vpn/locations падает 500 на создании новой записи;
+- нормализация payload делает новые locations/LTE-профили предсказуемыми для mobile app.
+
+Что проверить после деплоя:
+- создать новую location через admin;
+- создать/обновить LTE location через admin;
+- убедиться, что location видна в /locations и открывается /vpn/config/{code};
+- проверить в приложении выбор и подключение к новой location.

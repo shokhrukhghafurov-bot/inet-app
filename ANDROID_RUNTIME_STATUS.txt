@@ -1,0 +1,17 @@
+Android runtime status in this patch
+====================================
+
+What is now included
+- official uploaded libbox.aar copied into android/app/libs/libbox.aar
+- OfficialLibboxAndroidRuntime.kt now uses real libbox classes from io.nekohasekai.libbox
+- the adapter reuses the TUN fd already created by InetVpnService
+- protectSocket(fd) is forwarded to VpnService.protect(fd)
+
+What is still not fully finished here
+- this project patch does not include your host Gradle files, so you still need to ensure the host app module links libs/libbox.aar
+- end-to-end APK build was not run in this environment
+- iOS still needs a built Libbox.xcframework linked to PacketTunnel
+
+Practical expectation
+- Android is now wired to a real sing-box runtime adapter instead of a placeholder
+- iOS is still source-only until Libbox.xcframework exists

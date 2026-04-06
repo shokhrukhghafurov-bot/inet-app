@@ -1,0 +1,23 @@
+ADMIN + TUN PATCH
+=================
+
+What this patch changes:
+- admin VPN payload can now be the single source of truth for locations
+- backend auto-normalizes payload keys for mobile sing-box/TUN mode
+- backend can import raw_xray_config JSON and extract VLESS/Reality values automatically
+- mobile app now forces sing-box runner even if engine=xray is stored in admin payload
+- admin modal now shows clearer TUN/full-tunnel hints
+
+Important limitation:
+- native libbox/sing-box runtime binary is still required in Android/iOS build targets
+- this patch removes the need to edit code for each new location, but it does not bundle a real libbox SDK
+
+Files changed:
+- backend_admin/db_store.py
+- backend_admin/admin/status-dashboard.html
+- lib/core/vpn/vless_config.dart
+- android/app/src/main/kotlin/com/example/inet_app/vpn/VpnConnectConfig.kt
+- android/app/src/main/kotlin/com/example/inet_app/vpn/EmbeddedVpnEngine.kt
+- ios/PacketTunnel/PacketTunnelConnectConfig.swift
+- ios/Runner/Vpn/RunnerVpnConnectConfig.swift
+- ios/PacketTunnel/EmbeddedPacketTunnelEngine.swift

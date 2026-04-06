@@ -1,0 +1,22 @@
+TUN patch report v2
+===================
+
+What was improved in this archive
+- iOS Runner bridge no longer hardcodes `com.example.inetApp.PacketTunnel`
+- Runner now resolves PacketTunnel bundle id dynamically from `INetPacketTunnelBundleIdentifier`
+- Runner falls back to `<Runner bundle id>.PacketTunnel` when the Info.plist key is not overridden
+- PacketTunnelProvider now merges runtime start options with saved provider configuration
+- PacketTunnel config parsing now accepts string and numeric forms for ints/bools and normalizes comma-separated arrays
+- iOS libbox runtime now includes default-interface monitoring via NWPathMonitor
+- iOS libbox runtime now exposes current interfaces instead of returning an always-empty iterator
+- iOS docs and build script were updated so `Libbox.xcframework` can be produced from the uploaded sing-box sources on macOS
+
+What is still required outside this archive
+- a real iOS host project / Xcode targets (Runner + PacketTunnel extension)
+- a built `ios/Frameworks/Libbox.xcframework`
+- Xcode signing/capabilities for Network Extension on your Apple developer profile
+- final Android/Flutter host build files if your real app repo keeps them outside this patch archive
+
+Practical result
+- Android source path remains wired for real TUN + libbox runtime
+- iOS source path is now integration-ready and less brittle, but still requires the Apple framework build step on macOS
